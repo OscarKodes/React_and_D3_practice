@@ -8,6 +8,10 @@ npx create-react-app [app name]
 
 npm start
 
+### Deployment Link:
+
+https://oscarkodes.github.io/React_and_D3_practice/
+
 ---
 
 ---
