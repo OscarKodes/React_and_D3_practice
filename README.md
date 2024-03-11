@@ -1,3 +1,17 @@
+# Useful Commands:
+
+### Creates a react app through bash
+
+npx create-react-app [app name]
+
+### Starts the react app at current location
+
+npm start
+
+---
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
