@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import squirrelData from "../data/data.csv";
 
-const BarChart = () => {
+const BarChart = (props) => {
   const width = window.innerWidth * 0.8;
   const height = 600;
   const margin = 100;
 
   const pastel1Colors = d3.scaleOrdinal(d3.schemePastel1);
+  let svg = undefined;
 
   d3.csv(squirrelData, d3.autoType).then((data) => {
     console.log(data);
+
+    data = data.filter((d) => props.actArr.includes(d.activity));
 
     /* SCALES */
     const xScale = d3
@@ -31,17 +34,20 @@ const BarChart = () => {
     /* HTML ELEMENTS */
 
     // svg
-    const svg = d3
-      .select("#container")
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .style("background-color", "lavender");
+
+    if (svg === undefined) {
+      svg = d3
+        .select("#container")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("background-color", "lavender");
+    }
 
     // bars
     svg
       .selectAll(".bar")
-      .data(data)
+      .data(data, (d) => d.activity)
       .join("rect")
       .attr("class", "bar")
       .attr("height", (d) => yScale(d.count) - margin)
@@ -86,7 +92,12 @@ const BarChart = () => {
       .text("Count");
   });
 
-  return <h1>BarChart Title</h1>;
+  return (
+    <div>
+      <h1>BarChart Title</h1>
+      <div id="container"></div>
+    </div>
+  );
 };
 
 export default BarChart;

@@ -2,3 +2,12 @@ h1,
 #container {
     text-align: center;
 }
+
+.btnContainer {
+    text-align: center;
+    margin: 2rem auto;
+    padding: 1.5rem 0;
+    background-color: lavender;
+    width: 50%;
+    height: 5rem;
+}
