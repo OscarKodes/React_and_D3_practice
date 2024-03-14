@@ -8,28 +8,35 @@ const BarChart = (props) => {
   const margin = 100;
 
   const pastel1Colors = d3.scaleOrdinal(d3.schemePastel1);
-  let svg = undefined;
+  let svg, yScale, xScale, xAxis, yAxis;
+  let state = {};
 
   d3.csv(squirrelData, d3.autoType).then((data) => {
-    console.log(data);
+    state.data = data;
 
-    data = data.filter((d) => props.actArr.includes(d.activity));
+    d3.select("#btn").on("click", () => {
+      state.data[0].count += 50;
+
+      console.log(data[0]);
+
+      draw();
+    });
 
     /* SCALES */
-    const xScale = d3
+    xScale = d3
       .scaleBand()
       .domain(data.map((d) => d.activity))
       .range([margin, width - margin]);
 
-    const yScale = d3
+    yScale = d3
       .scaleLinear()
       .domain([0, d3.max(data, (d) => d.count)])
       .range([margin, height - margin]);
 
     // AXIS
-    const xAxis = d3.axisBottom().scale(xScale);
+    xAxis = d3.axisBottom().scale(xScale);
 
-    const yAxis = d3.axisLeft().scale(yScale);
+    yAxis = d3.axisLeft().scale(yScale);
 
     /* HTML ELEMENTS */
 
@@ -43,19 +50,6 @@ const BarChart = (props) => {
         .attr("height", height)
         .style("background-color", "lavender");
     }
-
-    // bars
-    svg
-      .selectAll(".bar")
-      .data(data, (d) => d.activity)
-      .join("rect")
-      .attr("class", "bar")
-      .attr("height", (d) => yScale(d.count) - margin)
-      .attr("width", xScale.bandwidth())
-      .attr("x", (d) => xScale(d.activity))
-      .attr("y", (d) => height - yScale(d.count))
-      .attr("fill", pastel1Colors)
-      .attr("stroke", "black");
 
     // xAxis ticks
     svg
@@ -90,11 +84,29 @@ const BarChart = (props) => {
       .style("font-weight", "bold")
       .style("font-size", "1.1rem")
       .text("Count");
+
+    draw();
   });
+
+  function draw() {
+    // bars
+    svg
+      .selectAll(".bar")
+      .data(state.data, (d) => d.activity)
+      .join("rect")
+      .attr("class", "bar")
+      .attr("height", (d) => yScale(d.count) - margin)
+      .attr("width", xScale.bandwidth())
+      .attr("x", (d) => xScale(d.activity))
+      .attr("y", (d) => height - yScale(d.count))
+      .attr("fill", pastel1Colors)
+      .attr("stroke", "black");
+  }
 
   return (
     <div>
       <h1>BarChart Title</h1>
+      <button id="btn">Add More</button>
       <div id="container"></div>
     </div>
   );
