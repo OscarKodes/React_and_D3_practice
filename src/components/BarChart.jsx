@@ -14,6 +14,7 @@ const BarChart = (props) => {
   d3.csv(squirrelData, d3.autoType).then((data) => {
     state.data = data;
 
+    // Add More Button
     d3.select("#btn").on("click", () => {
       state.data[0].count += 50;
 
@@ -106,7 +107,7 @@ const BarChart = (props) => {
   return (
     <div>
       <h1>BarChart Title</h1>
-      <button id="btn">Add More</button>
+      <button id="btn">Add More (D3)</button>
       <div id="container"></div>
     </div>
   );
