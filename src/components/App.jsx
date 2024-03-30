@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { select } from "d3";
+import { select, line, curveCardinal } from "d3";
 
 function App() {
-  const [data, setData] = useState([25, 30, 45, 60, 20]);
+  const [data, setData] = useState([25, 30, 45, 60, 20, 65, 75]);
   const svgRef = useRef();
 
   const updateDataHandler = () => {
@@ -18,29 +18,40 @@ function App() {
   };
 
   const resetDataHandler = () => {
-    setData((prevState) => {
-      return prevState.filter((d) => d <= 35);
-    });
+    setData([25, 30, 45, 60, 20, 65, 75]);
   };
 
+  // Will be called initially and on every data change
   useEffect(() => {
     console.log(svgRef);
 
-    const svg = select(svgRef.current);
+    const svg = select(svgRef.current).style("background-color", "lavender");
+    const myLine = line()
+      .x((value, i) => i * 50)
+      .y((value) => value)
+      .curve(curveCardinal);
+
+    // svg
+    //   .selectAll("circle")
+    //   .data(data)
+    //   .join(
+    //     (enter) => enter.append("circle"),
+    //     (update) => update.attr("class", "updated"),
+    //     (exit) => exit.remove()
+    //   )
+    //   .attr("r", (d) => d)
+    //   .attr("cx", (d) => d * 2)
+    //   .attr("cy", (d) => d * 2)
+    //   .attr("fill", "green")
+    //   .attr("stroke", "red");
 
     svg
-      .selectAll("circle")
-      .data(data)
-      .join(
-        (enter) => enter.append("circle"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove()
-      )
-      .attr("r", (d) => d)
-      .attr("cx", (d) => d * 2)
-      .attr("cy", (d) => d * 2)
-      .attr("fill", "green")
-      .attr("stroke", "red");
+      .selectAll("path")
+      .data([data])
+      .join("path")
+      .attr("d", (value) => myLine(value))
+      .attr("fill", "none")
+      .attr("stroke", "blue");
   }, [data]);
 
   return (
